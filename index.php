@@ -63,9 +63,12 @@ class DeliveryOptionCalc{
 
     if ($this->szerokosc <= 800 && $this->wysokosc <= 800 && $this->dlugosc <= 800) {
         // DPD Package 15zl za 
-        $package = ['name' => 'DPD', 'width'=> 800, 'length'=> 800, 'height' => 800, 'price' => 20];
+        $package = ['name' => 'DPD', 'width'=> 800, 'length'=> 800, 'height' => 800, 'price' => 15];
         $package_price = $this->ilosc * $package['price'];
-        //return "Dostawa: DPD Liczba opon: $tireCount Liczba paczek: $tireCount Waga paczki: ". $this->waga. "Waga calkowita: ". $this->waga * $tireCount;
+    } 
+    else
+    {
+        $package_price = null;
     }
         // Pallet Options
         $pallets = [
@@ -123,7 +126,7 @@ class DeliveryOptionCalc{
 
             $palletPrice = $bestPallet['palletCount'] * $bestPallet['price'];
 
-            if($package_price < $palletPrice){
+            if($package_price < $palletPrice && $package_price != null){
                 $bestDeliveryOption = $package;
             }
             else
@@ -137,7 +140,7 @@ class DeliveryOptionCalc{
             $palletCount = $deliveryName  == "DPD" ? $tireCount : $bestDeliveryOption['palletCount'];
             $totalPalletWeight = $this->waga * $tiresOnPallet;
             $totalWeight = $this->waga * $tireCount;
-            $lastPalletTireCount = $tiresOnPallet * $palletCount - $tireCount;
+            $lastPalletTireCount = $tireCount - $tiresOnPallet * $palletCount;
             $lastPalletWeight = $lastPalletTireCount * $this->waga;
 
             if($deliveryName == "DPD"){
