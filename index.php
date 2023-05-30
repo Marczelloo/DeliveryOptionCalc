@@ -47,17 +47,17 @@ class DeliveryOptionCalc{
     public function handleDeliveryOption(){
     $tireCount = $this->ilosc;
 
-    if ($tireCount == 1 && $this->szerokosc <= 800 && $this->wysokosc <= 800 && $this->dlugosc <= 800) {
-        // DPD Package
+    if ($this->szerokosc <= 800 && $this->wysokosc <= 800 && $this->dlugosc <= 800) {
+        // DPD Package 15zl za sztuke
         return "Dostawa: DPD Liczba opon: $tireCount Liczba paczek: $tireCount Waga paczki: ". $this->waga. "Waga calkowita: ". $this->waga * $tireCount;
     } else {
         // Pallet Options
         $pallets = [
-            ['name' => '1/2 Euro Pallet', 'width' => 800, 'length' => 600, 'height' => 1900, 'weight' => 25],
-            ['name' => 'Euro Pallet', 'width' => 800, 'length' => 1200, 'height' => 1900, 'weight' => 30],
-            ['name' => '160x90 Pallet', 'width' => 900, 'length' => 1600, 'height' => 1900, 'weight' => 35],
-            ['name' => '120x120 Pallet', 'width' => 1200, 'length' => 1200, 'height' => 1900, 'weight' => 40],
-            ['name' => '120x170 Pallet', 'width' => 1200, 'length' => 1700, 'height' => 1900, 'weight' => 45]
+            ['name' => '1/2 Euro Pallet', 'width' => 800, 'length' => 600, 'height' => 1900, 'weight' => 25, 'price' => 80],
+            ['name' => 'Euro Pallet', 'width' => 800, 'length' => 1200, 'height' => 1900, 'weight' => 30, 'price' => 120],
+            ['name' => '160x90 Pallet', 'width' => 900, 'length' => 1600, 'height' => 1900, 'weight' => 35, 'price' => 145],
+            ['name' => '120x120 Pallet', 'width' => 1200, 'length' => 1200, 'height' => 1900, 'weight' => 40, 'price' => 160],
+            ['name' => '120x170 Pallet', 'width' => 1200, 'length' => 1700, 'height' => 1900, 'weight' => 45, 'price' => 240]
         ];
 
         $validPallets = [];
