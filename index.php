@@ -4,24 +4,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;500;700;900&display=swap" rel="stylesheet">
     <title> Delivery Option Calculator </title>
 </head>
 <body>
     <div class="container">
         <form method="post">
+            <h1> Podaj wymiary opony </h1>
             <input type="number" name="szerokosc" placeholder="szerokosc [mm]">
             <input type="number" name="wysokosc" placeholder="wysokosc [mm]">
             <input type="number" name="ilosc" placeholder="ilosc">
             <input type="number" name="waga" placeholder="waga [kg]">
-            <input type="submit" value="Oblicz">
+            <input type="submit" name="submit" value="Oblicz">
         </form>
         <div class="result">
-            <p>
-                <?php
-                    $calc = new DeliveryOptionCalc($_POST['szerokosc'], $_POST['wysokosc'], $_POST['waga'], $_POST['ilosc']);
-                    echo "<br>".$calc->handleDeliveryOption();
-                ?>
-            </p>
+            <?php
+            if(isset($_POST["submit"]))
+            {
+                $calc = new DeliveryOptionCalc($_POST['szerokosc'], $_POST['wysokosc'], $_POST['waga'], $_POST['ilosc']);
+                $delivery = $calc->handleDeliveryOption();
+                    
+                echo "<h1>".$delivery['dostawa']."</h1>";
+
+                echo "<ul>";
+                foreach($delivery as $d => $k){
+                    echo "<li>".$d.": ".$k."</li>";
+                }
+                echo "</ul>";
+            }
+            ?>
         </div>
     </div>
 </body>
@@ -109,7 +123,6 @@ class DeliveryOptionCalc{
 
             $palletPrice = $bestPallet['palletCount'] * $bestPallet['price'];
 
-            echo "<br>".$palletPrice;
             if($package_price < $palletPrice){
                 $bestDeliveryOption = $package;
             }
@@ -128,16 +141,45 @@ class DeliveryOptionCalc{
             $lastPalletWeight = $lastPalletTireCount * $this->waga;
 
             if($deliveryName == "DPD"){
-                return "Dostawa: $deliveryName | Cena: $package_price | Liczba opon: $tireCount | Liczba opon w paczce: $tiresOnPallet | Liczba paczek: $palletCount | Waga paczki: $totalPalletWeight kg | Całkowita waga: $totalWeight kg";
+                return [
+                "dostawa" => $deliveryName,
+                "cena" => $package_price,
+                "liczba opon" => $tireCount,
+                "liczba opon w paczce" => $tiresOnPallet,
+                "liczba paczek" => $palletCount,
+                "waga paczki" => (string)$totalPalletWeight." kg",
+                "waga całkowita" => (string)$totalWeight." kg"
+                ];
+                // return "Dostawa: $deliveryName | Cena: $package_price | Liczba opon: $tireCount | Liczba opon w paczce: $tiresOnPallet | Liczba paczek: $palletCount | Waga paczki: $totalPalletWeight kg | Całkowita waga: $totalWeight kg";
             }
             else
             {
                 if($palletCount == 1){
-                    return "Dostawa: $deliveryName | Cena: $palletPrice | Liczba opon: $tireCount | Max liczba opon na palecie: $tiresOnPallet | Liczba palet: $palletCount | Max waga palety: $totalPalletWeight kg | Całkowita waga: $totalWeight kg";
+                    return [
+                        "dostawa" => $deliveryName,
+                        "cena" => $palletPrice,
+                        "liczba opon" => $tireCount,
+                        "max liczba opon na palecie" => $tiresOnPallet,
+                        "liczba palet" => $palletCount,
+                        "max waga palety" => (string)$totalPalletWeight." kg",
+                        "waga całkowita" => (string)$totalWeight." kg"
+                    ];
+                    // return "Dostawa: $deliveryName | Cena: $palletPrice | Liczba opon: $tireCount | Max liczba opon na palecie: $tiresOnPallet | Liczba palet: $palletCount | Max waga palety: $totalPalletWeight kg | Całkowita waga: $totalWeight kg";
                 }
                 else
                 {
-                    return "Dostawa $deliveryName | Cena: $palletPrice | Liczba opon $tireCount | Max liczba opon na palecie: $tiresOnPallet | Liczba opon na ostatniej palecie: $lastPalletTireCount | Liczba palet: $palletCount | Max waga palety: $totalPalletWeight kg | Waga ostatniej palety $lastPalletWeight | Całkowita waga: $totalWeight kg";
+                    return [
+                        "dostawa" => $deliveryName,
+                        "cena" => $palletPrice,
+                        "liczba opon" => $tireCount,
+                        "max liczba opon na palecie" => $tiresOnPallet,
+                        "liczba opon na ostatniej palecie" => $lastPalletTireCount,
+                        "liczba palet" => $palletCount,
+                        "max waga palety" => (string)$totalPalletWeight." kg",
+                        "waga ostatniej palety" => (string)$lastPalletWeight." kg",
+                        "waga całkowita" => (string)$totalWeight." kg"
+                    ];
+                    //return "Dostawa $deliveryName | Cena: $palletPrice | Liczba opon $tireCount | Max liczba opon na palecie: $tiresOnPallet | Liczba opon na ostatniej palecie: $lastPalletTireCount | Liczba palet: $palletCount | Max waga palety: $totalPalletWeight kg | Waga ostatniej palety $lastPalletWeight | Całkowita waga: $totalWeight kg";
                 } 
             }
             
