@@ -76,13 +76,24 @@ input[type="submit"]{
     font-weight: bold;
     font-size: 1.4rem;
     letter-spacing: 2px;
+    color: #d2daf4;
 
-    transition: background-color 300ms;
+    transition: all 300ms;
 }
 
 input[type="submit"]:hover{
     background-color: #8fcfe5;
-    transition: background-color 250ms;
+    color: #8fa5e5;
+    transition: all 250ms;
+}
+
+input[type="submit"]:active{
+    transform: scale(0.9);
+    transition: all 250ms;
+}
+
+input[type="submit"]:focus{
+    outline: 1px solid white;
 }
 
 .result{
